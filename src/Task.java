@@ -4,11 +4,10 @@ public class Task {
     private String description;
     private String status;
 
-    public Task(int id, String title, String description, String status) {
-        this.id = id;
+    public Task(String title, String description) {
         this.title = title;
         this.description = description;
-        this.status = status;
+        status = "NEW";
     }
 
     public String getTitle() {
@@ -41,5 +40,14 @@ public class Task {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    @Override
+    public String toString() {
+        return  getClass() + " {" +
+                "Id: " + id + ". " +
+                "Title: " + title + " " +
+                "Description.length: " + description.length() + ". " +
+                "Status: " + status + "." + "}" + '\n';
     }
 }
