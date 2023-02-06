@@ -1,11 +1,17 @@
+package manager;
+
+import models.Epic;
+import models.Subtask;
+import models.Task;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Manager {
 
-    final String NEW = "NEW";
-    final String  IN_PROGRESS = "IN_PROGRESS";
-    final String  DONE = "DONE";
+    public final String NEW = "NEW";
+    public final String  IN_PROGRESS = "IN_PROGRESS";
+    public final String  DONE = "DONE";
     private Integer id = 0;
     HashMap<Integer, Task> tasks = new HashMap<>();
     HashMap<Integer, Epic> epics = new HashMap<>();
@@ -85,25 +91,22 @@ public class Manager {
         changeEpicStatus(epics.get(subtask.getEpicId()));
     }
 
-    public void changeEpicStatus(Epic epic) {
-        int count = 0;
+    private void changeEpicStatus(Epic epic) {
         int statusNew = 0;
         int statusDone = 0;
 
-       for (Subtask subtask : subtasks.values()) {
-           if (epic.getSubtasksId().contains(subtask.getId())) {
-               count++;
-               if (subtask.getStatus().equals(NEW)) {
-                   statusNew++;
-               } else if (subtask.getStatus().equals(DONE)) {
-                   statusDone++;
-               }
-           }
-       }
+        for (int id : epic.getSubtasksId()) {
+            Subtask subtask = subtasks.get(id);
+            if (subtask.getStatus().equals(NEW)) {
+                statusNew++;
+            } else if (subtask.getStatus().equals(DONE)) {
+                statusDone++;
+            }
+        }
 
-       if (epic.getSubtasksId().size() == 0 || statusNew == count) {
+       if (epic.getSubtasksId().size() == 0 || statusNew == epic.getSubtasksId().size()) {
            epic.setStatus(NEW);
-       } else if (statusDone == count) {
+       } else if (statusDone == epic.getSubtasksId().size()) {
            epic.setStatus(DONE);
        } else {
            epic.setStatus(IN_PROGRESS);
