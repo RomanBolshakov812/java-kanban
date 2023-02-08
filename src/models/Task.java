@@ -1,15 +1,17 @@
 package models;
 
+import manager.InMemoryTaskManager;
+
 public class Task {
     private int id;
     private String title;
     private String description;
-    private String status;
+    private InMemoryTaskManager.Status status;
 
     public Task(String title, String description) {
         this.title = title;
         this.description = description;
-        status = "NEW";
+         status = InMemoryTaskManager.Status.NEW;
     }
 
     public String getTitle() {
@@ -36,11 +38,11 @@ public class Task {
         this.id = id;
     }
 
-    public String getStatus() {
+    public InMemoryTaskManager.Status getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(InMemoryTaskManager.Status status) {
         this.status = status;
     }
 

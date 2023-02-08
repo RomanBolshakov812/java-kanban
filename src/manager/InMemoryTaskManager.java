@@ -10,9 +10,14 @@ import java.util.List;
 
 public class InMemoryTaskManager implements TaskManager {
 
-    public final String NEW = "NEW";
-    public final String  IN_PROGRESS = "IN_PROGRESS";
-    public final String  DONE = "DONE";
+    public enum Status {
+        NEW,
+        IN_PROGRESS,
+        DONE
+    }
+    Status NEW = Status.NEW;
+    Status IN_PROGRESS = Status.IN_PROGRESS;
+    Status DONE = Status.DONE;
     private Integer id = 0;
     protected HashMap<Integer, Task> tasks = new HashMap<>();
     protected HashMap<Integer, Epic> epics = new HashMap<>();
