@@ -6,6 +6,7 @@ import models.Task;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class InMemoryTaskManager implements TaskManager {
 
@@ -13,9 +14,10 @@ public class InMemoryTaskManager implements TaskManager {
     public final String  IN_PROGRESS = "IN_PROGRESS";
     public final String  DONE = "DONE";
     private Integer id = 0;
-    HashMap<Integer, Task> tasks = new HashMap<>();
-    HashMap<Integer, Epic> epics = new HashMap<>();
-    HashMap<Integer, Subtask> subtasks = new HashMap<>();
+    protected HashMap<Integer, Task> tasks = new HashMap<>();
+    protected HashMap<Integer, Epic> epics = new HashMap<>();
+    protected HashMap<Integer, Subtask> subtasks = new HashMap<>();
+    protected List<Task> viewingHistory = new ArrayList<>();
 
     public ArrayList<Task> getListTasks() {
         return new ArrayList<>(tasks.values());
@@ -51,16 +53,19 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Task getTask(int id) {
+        historyUpdate(tasks.get(id));
         return tasks.get(id);
     }
 
     @Override
     public Epic getEpic(int id) {
+        historyUpdate(epics.get(id));
         return epics.get(id);
     }
 
     @Override
     public Subtask getSubtask(int id) {
+        historyUpdate(subtasks.get(id));
         return subtasks.get(id);
     }
 
@@ -150,9 +155,24 @@ public class InMemoryTaskManager implements TaskManager {
     public ArrayList<Subtask> getListSubtasksOfEpic(int epicId) {
         ArrayList<Subtask> listSubtasksOfEpic = new ArrayList<>();
         for (int subtaskId : epics.get(epicId).getSubtasksId()) {
-            if (subtasks.containsKey(subtaskId))
+            if (subtasks.containsKey(subtaskId)) {
                 listSubtasksOfEpic.add(subtasks.get(subtaskId));
+                historyUpdate(subtasks.get(subtaskId));
+            }
         }
         return listSubtasksOfEpic;
+    }
+
+    @Override
+    public void historyUpdate(Task task) {
+        if (viewingHistory.size() >= 10) {
+            viewingHistory.remove(0);
+        }
+        viewingHistory.add(task);
+    }
+
+    @Override
+    public List<Task> getHistory() {
+        return viewingHistory;
     }
 }
