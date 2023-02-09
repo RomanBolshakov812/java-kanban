@@ -3,10 +3,8 @@ package manager;
 import models.Epic;
 import models.Subtask;
 import models.Task;
-
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class InMemoryTaskManager implements TaskManager {
 
@@ -22,7 +20,7 @@ public class InMemoryTaskManager implements TaskManager {
     protected HashMap<Integer, Task> tasks = new HashMap<>();
     protected HashMap<Integer, Epic> epics = new HashMap<>();
     protected HashMap<Integer, Subtask> subtasks = new HashMap<>();
-    protected List<Task> viewingHistory = new ArrayList<>();
+    private final HistoryManager inMemoryHistoryManager = Managers.getDefaultHistory();
 
     @Override
     public ArrayList<Task> getListTasks() {
@@ -61,19 +59,19 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Task getTask(int id) {
-        updateHistory(tasks.get(id));
+        inMemoryHistoryManager.addHistory(tasks.get(id));
         return tasks.get(id);
     }
 
     @Override
     public Epic getEpic(int id) {
-        updateHistory(epics.get(id));
+        inMemoryHistoryManager.addHistory(epics.get(id));
         return epics.get(id);
     }
 
     @Override
     public Subtask getSubtask(int id) {
-        updateHistory(subtasks.get(id));
+        inMemoryHistoryManager.addHistory(subtasks.get(id));
         return subtasks.get(id);
     }
 
@@ -165,22 +163,14 @@ public class InMemoryTaskManager implements TaskManager {
         for (int subtaskId : epics.get(epicId).getSubtasksId()) {
             if (subtasks.containsKey(subtaskId)) {
                 listSubtasksOfEpic.add(subtasks.get(subtaskId));
-                updateHistory(subtasks.get(subtaskId));
+                inMemoryHistoryManager.addHistory(subtasks.get(subtaskId));
             }
         }
         return listSubtasksOfEpic;
     }
 
     @Override
-    public void updateHistory(Task task) {
-        if (viewingHistory.size() >= 10) {
-            viewingHistory.remove(0);
-        }
-        viewingHistory.add(task);
-    }
-
-    @Override
-    public List<Task> getHistory() {
-        return viewingHistory;
+    public HistoryManager getHistoryList() {
+        return inMemoryHistoryManager;
     }
 }
