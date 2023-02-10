@@ -8,14 +8,6 @@ import java.util.HashMap;
 
 public class InMemoryTaskManager implements TaskManager {
 
-    public enum Status {
-        NEW,
-        IN_PROGRESS,
-        DONE
-    }
-    Status NEW = Status.NEW;
-    Status IN_PROGRESS = Status.IN_PROGRESS;
-    Status DONE = Status.DONE;
     private Integer id = 0;
     protected HashMap<Integer, Task> tasks = new HashMap<>();
     protected HashMap<Integer, Epic> epics = new HashMap<>();
@@ -38,6 +30,9 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
+    public HistoryManager getInMemoryHistoryManager() {return inMemoryHistoryManager;}
+
+    @Override
     public void deleteAllTasks() {
         tasks.clear();
     }
@@ -52,7 +47,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void deleteAllSubtasks() {
         for (Epic epic : epics.values()) {
             epic.getSubtasksId().clear();
-            epic.setStatus(NEW);
+            epic.setStatus(Status.NEW);
         }
         subtasks.clear();
     }
@@ -121,19 +116,19 @@ public class InMemoryTaskManager implements TaskManager {
 
         for (int id : epic.getSubtasksId()) {
             Subtask subtask = subtasks.get(id);
-            if (subtask.getStatus().equals(NEW)) {
+            if (subtask.getStatus().equals(Status.NEW)) {
                 statusNew++;
-            } else if (subtask.getStatus().equals(DONE)) {
+            } else if (subtask.getStatus().equals(Status.DONE)) {
                 statusDone++;
             }
         }
 
        if (epic.getSubtasksId().size() == 0 || statusNew == epic.getSubtasksId().size()) {
-           epic.setStatus(NEW);
+           epic.setStatus(Status.NEW);
        } else if (statusDone == epic.getSubtasksId().size()) {
-           epic.setStatus(DONE);
+           epic.setStatus(Status.DONE);
        } else {
-           epic.setStatus(IN_PROGRESS);
+           epic.setStatus(Status.IN_PROGRESS);
        }
     }
 
@@ -167,10 +162,5 @@ public class InMemoryTaskManager implements TaskManager {
             }
         }
         return listSubtasksOfEpic;
-    }
-
-    @Override
-    public HistoryManager getHistoryList() {
-        return inMemoryHistoryManager;
     }
 }

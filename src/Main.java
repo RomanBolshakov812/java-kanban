@@ -71,6 +71,6 @@ public class Main {
         inMemoryTaskManager.getEpic(6);
         inMemoryTaskManager.getSubtask(12);
         inMemoryTaskManager.getTask(4);
-        System.out.println(inMemoryTaskManager.getHistoryList().getHistory());
+        System.out.println(inMemoryTaskManager.getInMemoryHistoryManager().getHistory());
     }
 }
