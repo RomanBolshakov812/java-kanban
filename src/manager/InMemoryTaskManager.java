@@ -1,10 +1,12 @@
 package manager;
 
 import models.Epic;
+import models.Status;
 import models.Subtask;
 import models.Task;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class InMemoryTaskManager implements TaskManager {
 
@@ -30,7 +32,9 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public HistoryManager getInMemoryHistoryManager() {return inMemoryHistoryManager;}
+    public List<Task> getHistory() {
+        return inMemoryHistoryManager.getHistory();
+    }
 
     @Override
     public void deleteAllTasks() {

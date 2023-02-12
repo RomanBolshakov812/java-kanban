@@ -1,8 +1,5 @@
 package models;
 
-import manager.InMemoryTaskManager;
-import manager.Status;
-
 public class Task {
     private int id;
     private String title;

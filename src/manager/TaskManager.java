@@ -14,7 +14,8 @@ public interface TaskManager {
 
     ArrayList<Subtask> getListSubtasks();
 
-    HistoryManager getInMemoryHistoryManager();
+    List<Task> getHistory();
+
     void deleteAllTasks();
 
     void deleteAllEpics();
