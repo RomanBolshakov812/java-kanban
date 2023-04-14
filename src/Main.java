@@ -1,4 +1,3 @@
-import fileSavingManager.FileBackedTasksManager;
 import manager.Managers;
 import manager.TaskManager;
 import models.Epic;
@@ -11,7 +10,7 @@ public class Main {
 
         System.out.println();
         TaskManager inMemoryTaskManager = Managers.getDefault();
-
+/*
         System.out.println("---Создаем 2 задачи.");
         Task task1 = new Task("Задача 1.", "Задача 1.");
         inMemoryTaskManager.createTask(task1);
@@ -77,6 +76,6 @@ public class Main {
 
         System.out.println("Вызываем историю просмотров:");
         System.out.println();
-        System.out.println(inMemoryTaskManager.getHistory());
+        System.out.println(inMemoryTaskManager.getHistory());*/
     }
 }

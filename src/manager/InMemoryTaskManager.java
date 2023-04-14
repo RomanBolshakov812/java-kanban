@@ -10,12 +10,11 @@ import java.util.List;
 
 public class InMemoryTaskManager implements TaskManager {
 
-    // У id был статус private!!!!!
     protected Integer id = 0;
     protected HashMap<Integer, Task> tasks = new HashMap<>();
     protected HashMap<Integer, Epic> epics = new HashMap<>();
     protected HashMap<Integer, Subtask> subtasks = new HashMap<>();
-    // У inMemoryHistoryManager был статус private!!!!!
+
     protected HistoryManager inMemoryHistoryManager = Managers.getDefaultHistory();
 
     @Override

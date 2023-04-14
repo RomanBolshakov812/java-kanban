@@ -1,15 +1,19 @@
 package models;
 
+import file.TaskType;
+
 public class Task {
     private int id;
     private String title;
     private String description;
     private Status status;
+    private final TaskType taskType = TaskType.TASK;
 
-    public Task(String title, String description) {
+    public Task(int id, String title, String description, Status status) {
+        this.id = id;
         this.title = title;
         this.description = description;
-         status = Status.NEW;
+        this.status = status;
     }
 
     public String getTitle() {
@@ -44,12 +48,15 @@ public class Task {
         this.status = status;
     }
 
+    public TaskType getTaskType() {
+        return taskType;
+    }
+
     @Override
     public String toString() {
         return  getClass() + " {" +
                 "Id: " + id + ". " +
                 "Title: " + title + " " +
-                "Description.length: " + description.length() + ". " +
-                "Status: " + status + "." + "}" + '\n';
+                "Description.length: " + description.length() + ". " +"Status: " + status + "." + "}" + '\n';
     }
 }
