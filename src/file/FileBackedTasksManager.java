@@ -2,6 +2,7 @@ package file;
 
 import manager.InMemoryTaskManager;
 import models.Epic;
+import models.Status;
 import models.Subtask;
 import models.Task;
 import java.io.*;
@@ -112,23 +113,23 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
     @Override
     public Task getTask(int id) {
-        super.getTask(id);
+        Task task = super.getTask(id);
         save();
-        return tasks.get(id);
+        return task;
     }
 
     @Override
     public Epic getEpic(int id) {
-        super.getEpic(id);
+        Epic epic = super.getEpic(id);
         save();
-        return epics.get(id);
+        return epic;
     }
 
     @Override
     public Subtask getSubtask(int id) {
-        super.getSubtask(id);
+        Subtask subtask = super.getSubtask(id);
         save();
-        return subtasks.get(id);
+        return subtask;
     }
 
     @Override
@@ -188,29 +189,46 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     public static void main(String[] args) {
 
         File file = new File("resources/historyManagerData.csv");
+        FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager(file);
 
-        //FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager(file);
-        FileBackedTasksManager fileBackedTasksManager2 = loadFromFile(new File("resources/historyManagerData.csv"));
-/*
+        System.out.println();
+        System.out.println("Создали МЕНЕДЖЕР 1 из пустого файла.");
         System.out.println("---Создаем 2 задачи.");
         Task task1 = new Task(1,"Задача 1.", "Задача 1.", Status.NEW);
         fileBackedTasksManager.createTask(task1);
         Task task2 = new Task(2,"Задача 2.", "Задача 2.", Status.NEW);
         fileBackedTasksManager.createTask(task2);
 
-        System.out.println("---Создаем 2 ЭПИКА.");
+        System.out.println("---Создаем 3 ЭПИКА.");
         Epic epic3 = new Epic(3, "ЭПИК 1", "Эпик 1", Status.NEW);
         fileBackedTasksManager.createEpic(epic3);
         Epic epic4 = new Epic(4, "ЭПИК 2", "Эпик 2", Status.NEW);
         fileBackedTasksManager.createEpic(epic4);
+        Epic epic5 = new Epic(5, "ЭПИК 3", "Эпик 3", Status.NEW);
+        fileBackedTasksManager.createEpic(epic5);
 
         System.out.println("---Добавляем подзадачи 1-3 к ЭПИКУ 1.");
-        Subtask subtask5 = new Subtask(5, "Подзадача 1 к ЭПИКУ 1.", "Подзадача 1 Эпик 1.", Status.NEW, 3);
-        fileBackedTasksManager.createSubtask(subtask5);
-        Subtask subtask6 = new Subtask(6, "Подзадача 2 к ЭПИКУ 1.", "Подзадача 2 Эпик 1.", Status.NEW, 3);
+        Subtask subtask6 = new Subtask(6, "Подзадача 1 к ЭПИКУ 1.", "Подзадача 1 Эпик 1.", Status.NEW, 3);
         fileBackedTasksManager.createSubtask(subtask6);
-        Subtask subtask7 = new Subtask(7, "Подзадача 3 к ЭПИКУ 1.", "Подзадача 2 Эпик 1.", Status.NEW, 3);
+        Subtask subtask7 = new Subtask(7, "Подзадача 2 к ЭПИКУ 1.", "Подзадача 2 Эпик 1.", Status.NEW, 3);
         fileBackedTasksManager.createSubtask(subtask7);
+        Subtask subtask8 = new Subtask(8, "Подзадача 3 к ЭПИКУ 1.", "Подзадача 2 Эпик 1.", Status.NEW, 3);
+        fileBackedTasksManager.createSubtask(subtask8);
+
+        System.out.println("---Добавляем подзадачи 1-2 к ЭПИКУ 2.");
+        Subtask subtask9 = new Subtask(9, "Подзадача 1 к ЭПИКУ 2.", "Подзадача 1 Эпик 2.", Status.NEW, 4);
+        fileBackedTasksManager.createSubtask(subtask9);
+        Subtask subtask10 = new Subtask(10, "Подзадача 2 к ЭПИКУ 2.", "Подзадача 2 Эпик 2.", Status.NEW, 4);
+        fileBackedTasksManager.createSubtask(subtask10);
+
+        System.out.println("---ОБЩИЙ СПИСОК:");
+        System.out.println("---Список задач:");
+        System.out.println(fileBackedTasksManager.getListTasks());
+        System.out.println("---Список ЭПИКОВ:");
+        System.out.println(fileBackedTasksManager.getListEpics());
+        System.out.println("---Список подзадач:");
+        System.out.println(fileBackedTasksManager.getListSubtasks());
+        System.out.println();
 
         System.out.println("Вызываем задачи.");
         System.out.println();
@@ -218,8 +236,11 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         fileBackedTasksManager.getTask(2);
         fileBackedTasksManager.getEpic(3);
         fileBackedTasksManager.getTask(1);
-        fileBackedTasksManager.getEpic(4);
+        fileBackedTasksManager.getEpic(5);
         fileBackedTasksManager.getSubtask(5);
+        fileBackedTasksManager.getEpic(4);
+        fileBackedTasksManager.getSubtask(10);
+        fileBackedTasksManager.getSubtask(9);
         fileBackedTasksManager.getEpic(3);
         fileBackedTasksManager.getSubtask(6);
         fileBackedTasksManager.getSubtask(7);
@@ -228,17 +249,43 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         System.out.println("Вызываем историю просмотров:");
         System.out.println();
         System.out.println(fileBackedTasksManager.getHistory());
-*/
-        System.out.println("Удаляем задачу 1 и ЭПИК 1");
-        fileBackedTasksManager2.deleteTask(1);
-        fileBackedTasksManager2.deleteSubtask(6);
 
-        System.out.println("Вызываем историю просмотров:");
+        System.out.println("Удаляем задачу 1, ЭПИК 2 и ЭПИК 3, подзадачи 2 и 3 ЭПИКА 1");
+        fileBackedTasksManager.deleteTask(1);
+        fileBackedTasksManager.deleteEpic(4);
+        fileBackedTasksManager.deleteEpic(5);
+        fileBackedTasksManager.deleteSubtask(7);
+        fileBackedTasksManager.deleteSubtask(8);
+
+        System.out.println("---Обновленный ОБЩИЙ СПИСОК:");
+        System.out.println("---Список задач:");
+        System.out.println(fileBackedTasksManager.getListTasks());
+        System.out.println("---Список ЭПИКОВ:");
+        System.out.println(fileBackedTasksManager.getListEpics());
+        System.out.println("---Список подзадач:");
+        System.out.println(fileBackedTasksManager.getListSubtasks());
         System.out.println();
-        //System.out.println(fileBackedTasksManager.getHistory());
-        System.out.println(fileBackedTasksManager2.getListTasks());
-        System.out.println(fileBackedTasksManager2.getListSubtasks());
-        System.out.println(fileBackedTasksManager2.getListEpics());
+
+        System.out.println("Обновленная история просмотров:");
+        System.out.println();
+        System.out.println(fileBackedTasksManager.getHistory());
+
+        System.out.println();
+        System.out.println("Создаем МЕНЕДЖЕР 2");
+        System.out.println();
+        FileBackedTasksManager fileBackedTasksManager2 = loadFromFile(new File("resources/historyManagerData.csv"));
+
+        System.out.println("---ОБЩИЙ СПИСОК МЕНЕДЖЕРА 2:");
+        System.out.println("---Список задач:");
+        System.out.println(fileBackedTasksManager.getListTasks());
+        System.out.println("---Список ЭПИКОВ:");
+        System.out.println(fileBackedTasksManager.getListEpics());
+        System.out.println("---Список подзадач:");
+        System.out.println(fileBackedTasksManager.getListSubtasks());
+        System.out.println();
+
+        System.out.println("История просмотров МЕНЕДЖЕРА 2:");
+        System.out.println();
         System.out.println(fileBackedTasksManager2.getHistory());
     }
 }
