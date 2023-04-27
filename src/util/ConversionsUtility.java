@@ -6,10 +6,15 @@ import models.Epic;
 import models.Status;
 import models.Subtask;
 import models.Task;
+
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public final class ConversionsUtility {
+
+    private static LocalDateTime startTime;
 
     public static String toFileString(Task task) {
         StringBuilder stringBuilder = new StringBuilder();
@@ -17,6 +22,8 @@ public final class ConversionsUtility {
                 append(task.getTaskType()).append(",").
                 append(task.getTitle()).append(",").
                 append(task.getStatus()).append(",").
+                append(task.getStartTime()).append(",").
+                append(task.getDuration()).append(",").
                 append(task.getDescription()).append(",");
 
         if (task.getTaskType() == TaskType.SUBTASK) {
@@ -41,15 +48,22 @@ public final class ConversionsUtility {
         TaskType type = TaskType.valueOf(parts[1]);
         String title = parts[2];
         Status status = Status.valueOf(parts[3]);
-        String description = parts[4];
+        if (parts[4].equals("null")) {
+            startTime = null;
+        } else {
+            startTime = LocalDateTime.parse(parts[4]);
+        }
+        long duration = Long.parseLong(parts[5]);
+        String description = parts[6];
+
         switch (type) {
             case TASK:
-                return new Task(id, title, description, status);
+                return new Task(id, title, status, startTime, duration, description);
             case EPIC:
-                return new Epic(id, title, description, status);
+                return new Epic(id, title, status, startTime, duration, description);
             case SUBTASK:
-                int epicId = Integer.parseInt(parts[5]);
-                return new Subtask(id, title, description, status, epicId);
+                int epicId = Integer.parseInt(parts[7]);
+                return new Subtask(id, title, status, startTime, duration, description, epicId);
             default:
                 break;
         }
