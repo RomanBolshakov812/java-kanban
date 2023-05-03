@@ -1,7 +1,6 @@
 package models;
 
 import file.TaskType;
-
 import java.time.LocalDateTime;
 
 public class Subtask extends Task {

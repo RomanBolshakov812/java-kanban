@@ -13,16 +13,39 @@ public class InMemoryTaskManager implements TaskManager {
     protected HashMap<Integer, Task> tasks = new HashMap<>();
     protected HashMap<Integer, Epic> epics = new HashMap<>();
     protected HashMap<Integer, Subtask> subtasks = new HashMap<>();
-    protected Set<Task> tasksByStartTime = new TreeSet<Task>(new Comparator<Task>() {
+
+    protected Set<Task> tasksByStartTime = new TreeSet<>(new Comparator<Task>() {
         @Override
         public int compare(Task task1, Task task2) {
-            if (task2.getStartTime() == null) {
+            if (task1.getStartTime() == null && task2.getStartTime() == null) {
+                return 1;
+            } else if (task1.getStartTime() == null) {
+                return 1;
+            } else if (task2.getStartTime() == null) {
                 return -1;
             } else {
                 return task1.getStartTime().compareTo(task2.getStartTime());
             }
         }
     });
+
+    /*
+    protected Set<Task> tasksByStartTime = new TreeSet<>(new Comparator<Task>() {
+        @Override
+        public int compare(Task task1, Task task2) {
+            if (task1.getStartTime() == null ) {
+                return -1;
+            } else if (task2.getStartTime() == null) {
+                return 1;
+            } else {
+                return task1.getStartTime().compareTo(task2.getStartTime());
+            }
+        }
+    });
+
+    */
+
+
 
     protected HistoryManager inMemoryHistoryManager = Managers.getDefaultHistory();
 
@@ -104,14 +127,16 @@ public class InMemoryTaskManager implements TaskManager {
         inMemoryHistoryManager.addHistory(subtasks.get(id));
         return subtasks.get(id);
     }
-
-    @Override
-    public boolean isTimeIntervalCheck(Task newTask) {
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+    //@Override
+    private boolean isTimeIntervalCheck(Task newTask) {
         boolean isCheck = true;
         if (newTask.getStartTime() != null) {
             for (Task task : tasksByStartTime) {
                 if (task.getStartTime() != null) {
-                    if (newTask.getStartTime().isAfter(task.getStartTime()) &&
+                    if (newTask.getStartTime().equals(task.getStartTime()) && newTask.getId() != task.getId()) {
+                        isCheck = false;
+                    } else if (newTask.getStartTime().isAfter(task.getStartTime()) &&
                             newTask.getStartTime().isBefore(task.getEndTime())) {
                         isCheck = false;
                     } else if (newTask.getEndTime().isAfter(task.getStartTime()) &&
@@ -199,8 +224,8 @@ public class InMemoryTaskManager implements TaskManager {
         return LocalDateTime.now();
     }
 */
-    @Override
-    public void changeEpicStatus(Epic epic) {
+    //@Override
+    private void changeEpicStatus(Epic epic) {
         int statusNew = 0;
         int statusDone = 0;
 
@@ -222,8 +247,8 @@ public class InMemoryTaskManager implements TaskManager {
        }
     }
 
-    @Override
-    public void setEpicStartTime(Epic epic) {
+    //@Override
+    private void setEpicStartTime(Epic epic) {
         if (!epic.getSubtasksByStartTime().isEmpty()) {
             epic.setStartTime(epic.getSubtasksByStartTime().first().getStartTime());
         } else {
@@ -231,8 +256,8 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
 
-    @Override
-    public void setEpicDuration(Epic epic) {
+    //@Override
+    private void setEpicDuration(Epic epic) {
         if (!epic.getSubtasksByStartTime().isEmpty()) {
             long duration = 0;
             for (Subtask subtask : epic.getSubtasksByStartTime()) {

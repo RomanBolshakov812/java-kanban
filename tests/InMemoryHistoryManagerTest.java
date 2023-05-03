@@ -1,14 +1,10 @@
 import manager.InMemoryHistoryManager;
 import models.Status;
 import models.Task;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import java.time.LocalDateTime;
 import java.time.Month;
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 public class InMemoryHistoryManagerTest {

@@ -1,11 +1,7 @@
 package models;
 
 import file.TaskType;
-
 import java.time.LocalDateTime;
-import java.time.Month;
-
-import static java.time.Month.JUNE;
 
 public class Task {
     private int id;

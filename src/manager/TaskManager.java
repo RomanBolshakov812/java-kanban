@@ -36,7 +36,7 @@ public interface TaskManager {
 
     Subtask getSubtask(int id);
 
-    boolean isTimeIntervalCheck(Task task);
+    //boolean isTimeIntervalCheck(Task task);
 
     void createTask(Task task);
 
@@ -55,11 +55,11 @@ public interface TaskManager {
 
     //long getEpicDuration(Epic epic);
 
-    void changeEpicStatus(Epic epic);
+    //void changeEpicStatus(Epic epic);
 
-    void setEpicStartTime(Epic epic);
+    //void setEpicStartTime(Epic epic);
 
-    void setEpicDuration(Epic epic);
+    //void setEpicDuration(Epic epic);
 
     void deleteTask(int id);
 
