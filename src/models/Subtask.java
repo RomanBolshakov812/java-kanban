@@ -1,11 +1,10 @@
 package models;
 
-import file.TaskType;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 public class Subtask extends Task {
     private final int epicId;
-    private final TaskType taskType = TaskType.SUBTASK;
 
     public Subtask(int id, String title, Status status, LocalDateTime startTime, long duration, String description, int epicId) {
         super(id, title, status, startTime, duration, description);
@@ -17,7 +16,7 @@ public class Subtask extends Task {
     }
 
     public TaskType getTaskType() {
-        return taskType;
+        return TaskType.SUBTASK;
     }
 
     @Override
@@ -27,8 +26,23 @@ public class Subtask extends Task {
                 "title: " + this.getTitle() + ". " +
                 "status: " + this.getStatus() + ". " +
                 "Start: " + this.getStartTime() + ". " +
+                "End: " + getEndTime() + ". " +
                 "Duration: " + this.getDuration() + ". " +
                 "description.length: " + this.getDescription().length() + ". " +
                 "epicId: " + epicId + "}" + '\n';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        Subtask subtask = (Subtask) o;
+        return epicId == subtask.epicId;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), epicId);
     }
 }

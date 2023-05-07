@@ -1,29 +1,18 @@
 package models;
 
-import file.TaskType;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.TreeSet;
+import java.util.Objects;
 
 public class Epic extends Task {
 
+    private LocalDateTime endTime;
     private final ArrayList<Integer> subtasksId = new ArrayList<>();
-    private final TreeSet<Subtask> subtasksByStartTime = new TreeSet<>((subtask1, subtask2) -> {
-        if (subtask1.getStartTime() == null && subtask2.getStartTime() == null) {
-            return 1;
-        } else if (subtask1.getStartTime() == null) {
-            return 1;
-        } else if (subtask2.getStartTime() == null) {
-            return -1;
-        } else {
-            return subtask1.getStartTime().compareTo(subtask2.getStartTime());
-        }
-    });
 
-    private final TaskType taskType = TaskType.EPIC;
-
-    public Epic(int id, String title, Status status, LocalDateTime startTime, long duration, String description) {
+    public Epic(int id, String title, Status status, LocalDateTime startTime,
+                long duration, String description, LocalDateTime endTime) {
         super(id, title,  status, startTime, duration, description);
+        this.endTime = endTime;
     }
 
     public void setSubtasksId(int id) {
@@ -35,20 +24,16 @@ public class Epic extends Task {
     }
 
     public TaskType getTaskType() {
-        return taskType;
+        return TaskType.EPIC;
     }
 
-    public void setSubtasksByStartTime(Subtask subtask) {
-        subtasksByStartTime.add(subtask);
-    }
-
-    public TreeSet<Subtask> getSubtasksByStartTime() {
-        return subtasksByStartTime;
+    public void  setEndTime(LocalDateTime time) {
+        endTime = time;
     }
 
     @Override
     public LocalDateTime getEndTime() {
-        return  subtasksByStartTime.last().getEndTime();
+        return endTime;
     }
 
     @Override
@@ -58,8 +43,23 @@ public class Epic extends Task {
                 "title: " + this.getTitle() + " " +
                 "status: " + this.getStatus() + "." +
                 "Start: " + this.getStartTime() + ". " +
+                "End: " + endTime + ". " +
                 "Duration: " + this.getDuration() + ". " +
                 "description.length: " + this.getDescription().length() + ". " +
                 "subtasksId: " + subtasksId + "}" + '\n';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        Epic epic = (Epic) o;
+        return Objects.equals(endTime, epic.endTime) && Objects.equals(subtasksId, epic.subtasksId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), endTime, subtasksId);
     }
 }

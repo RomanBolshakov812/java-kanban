@@ -1,6 +1,6 @@
 package util;
 
-import file.TaskType;
+import models.TaskType;
 import manager.HistoryManager;
 import models.Epic;
 import models.Status;
@@ -11,8 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class ConversionsUtility {
-
-    private static LocalDateTime startTime;
 
     public static String toFileString(Task task) {
         StringBuilder stringBuilder = new StringBuilder();
@@ -26,6 +24,8 @@ public final class ConversionsUtility {
 
         if (task.getTaskType() == TaskType.SUBTASK) {
             stringBuilder.append(((Subtask) task).getEpicId()).append('\n');
+        } else if (task.getTaskType() == TaskType.EPIC) {
+            stringBuilder.append(((Epic) task).getEndTime()).append('\n');
         } else {
             stringBuilder.append('\n');
         }
@@ -46,6 +46,7 @@ public final class ConversionsUtility {
         TaskType type = TaskType.valueOf(parts[1]);
         String title = parts[2];
         Status status = Status.valueOf(parts[3]);
+        LocalDateTime startTime;
         if (parts[4].equals("null")) {
             startTime = null;
         } else {
@@ -58,7 +59,8 @@ public final class ConversionsUtility {
             case TASK:
                 return new Task(id, title, status, startTime, duration, description);
             case EPIC:
-                return new Epic(id, title, status, startTime, duration, description);
+                LocalDateTime endTime = LocalDateTime.parse(parts[7]);
+                return new Epic(id, title, status, startTime, duration, description, endTime);
             case SUBTASK:
                 int epicId = Integer.parseInt(parts[7]);
                 return new Subtask(id, title, status, startTime, duration, description, epicId);

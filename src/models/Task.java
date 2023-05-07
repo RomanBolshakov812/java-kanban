@@ -1,7 +1,7 @@
 package models;
 
-import file.TaskType;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 public class Task {
     private int id;
@@ -10,7 +10,6 @@ public class Task {
     private LocalDateTime startTime;
     private long duration;
     private Status status;
-    private final TaskType taskType = TaskType.TASK;
 
     public Task(int id, String title, Status status, LocalDateTime startTime, long duration, String description) {
         this.id = id;
@@ -74,7 +73,7 @@ public class Task {
     }
 
     public TaskType getTaskType() {
-        return taskType;
+        return TaskType.TASK;
     }
 
     @Override
@@ -84,7 +83,26 @@ public class Task {
                 "Title: " + title + ". " +
                 "Status: " + status + ". " +
                 "Start: " + startTime + ". " +
+                "End: " + getEndTime() + ". " +
                 "Duration: " + duration + ". " +
                 "Description.length: " + description.length() + ".}" + '\n';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Task task = (Task) o;
+        return id == task.id
+                && duration == task.duration
+                && Objects.equals(title, task.title)
+                && Objects.equals(description, task.description)
+                && Objects.equals(startTime, task.startTime)
+                && status == task.status;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, title, description, startTime, duration, status);
     }
 }

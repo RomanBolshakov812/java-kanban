@@ -3,10 +3,7 @@ package manager;
 import models.Epic;
 import models.Subtask;
 import models.Task;
-
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
@@ -17,8 +14,6 @@ public interface TaskManager {
     ArrayList<Epic> getListEpics();
 
     ArrayList<Subtask> getListSubtasks();
-
-    //void addTaskByStartTime(Task task);
 
     public Set<Task> getPrioritizedTasks();
 
@@ -36,8 +31,6 @@ public interface TaskManager {
 
     Subtask getSubtask(int id);
 
-    //boolean isTimeIntervalCheck(Task task);
-
     void createTask(Task task);
 
     void createEpic(Epic epic);
@@ -49,17 +42,6 @@ public interface TaskManager {
     void updateEpic(Epic epic);
 
     void updateSubtask(Subtask subtask);
-
-    /////////////////// ДОБАВЛЕНО 2 (!!!) МЕТОДА:    ///////////////////////////////
-    //LocalDateTime getEpicStartTime (Epic epic);
-
-    //long getEpicDuration(Epic epic);
-
-    //void changeEpicStatus(Epic epic);
-
-    //void setEpicStartTime(Epic epic);
-
-    //void setEpicDuration(Epic epic);
 
     void deleteTask(int id);
 

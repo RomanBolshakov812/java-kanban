@@ -1,21 +1,12 @@
 package file;
 
 import manager.InMemoryTaskManager;
-import manager.Managers;
-import manager.TaskManager;
-import models.Epic;
-import models.Status;
-import models.Subtask;
-import models.Task;
+import models.*;
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
-
-
 import static util.ConversionsUtility.*;
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
@@ -88,11 +79,14 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                     if ((i + 1) < content.size() && !(content.get(i + 1)).isBlank()) {
                         for (Integer taskId : historyFromFileString(content.get(i + 1))) {
                             if (fileBackedTasksManager.tasks.containsKey(taskId)) {
-                                fileBackedTasksManager.inMemoryHistoryManager.addHistory(fileBackedTasksManager.tasks.get(taskId));
+                                fileBackedTasksManager.inMemoryHistoryManager
+                                        .addHistory(fileBackedTasksManager.tasks.get(taskId));
                             } else if (fileBackedTasksManager.epics.containsKey(taskId)) {
-                                fileBackedTasksManager.inMemoryHistoryManager.addHistory(fileBackedTasksManager.epics.get(taskId));
+                                fileBackedTasksManager.inMemoryHistoryManager
+                                        .addHistory(fileBackedTasksManager.epics.get(taskId));
                             } else if (fileBackedTasksManager.subtasks.containsKey(taskId)) {
-                                fileBackedTasksManager.inMemoryHistoryManager.addHistory(fileBackedTasksManager.subtasks.get(taskId));
+                                fileBackedTasksManager.inMemoryHistoryManager
+                                        .addHistory(fileBackedTasksManager.subtasks.get(taskId));
                             }
                         }
                         break;
@@ -140,6 +134,13 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         Subtask subtask = super.getSubtask(id);
         save();
         return subtask;
+    }
+
+    @Override
+    protected boolean isTimeIntervalCheck(Task newTask) {
+        boolean isCheck = super.isTimeIntervalCheck(newTask);
+        save();
+        return isCheck;
     }
 
     @Override
@@ -203,25 +204,29 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
         System.out.println();
         Task task1 = new Task(1,"Задача 1", Status.NEW, LocalDateTime
-                .of(2023,Month.APRIL,22,22,1), 1,"Задача 1.");
+                .of(2023,Month.APRIL,22,22,2), 1,"Задача 1.");
         Task task2 = new Task(2,"Задача 2", Status.NEW, LocalDateTime
-                .of(2023,Month.APRIL,22,22,3), 1,"Задача 2.");
-        Task task3 = new Task(3,"Задача 3", Status.NEW, null, 1,"Задача 3.");
+                .of(2023,Month.APRIL,22,22,4), 1,"Задача 2.");
+        Task task3 = new Task(3,"Задача 3", Status.NEW, LocalDateTime
+                .of(2023,Month.APRIL,22,22,8), 1,"Задача 3.");
         fileBackedTasksManager.createTask(task1);
         fileBackedTasksManager.createTask(task2);
         fileBackedTasksManager.createTask(task3);
-        Epic epic = new Epic(4, "ЭПИК 1", Status.NEW,null,0,"Эпик 1");
+        Epic epic = new Epic(4, "ЭПИК 1", Status.NEW,null,0,"Эпик 1", null);
         fileBackedTasksManager.createEpic(epic);
-        Subtask subtask1 = new Subtask(4,"Подзадача 1 к ЭПИКУ 1", Status.NEW, null,
+        Subtask subtask1 = new Subtask(4,"Подзадача 1 к ЭПИКУ 1", Status.NEW, LocalDateTime
+                .of(2023,Month.APRIL,22,22,6),
                 1,"Подзадача 1 Эпик 1.", 4);
         Subtask subtask2 = new Subtask(5,"Подзадача 2 к ЭПИКУ 1", Status.NEW, LocalDateTime
-                .of(2023,Month.APRIL,22,22,0), 1,"Подзадача 2 Эпик 1.", 4);
+                .of(2023,Month.APRIL,22,22,0),
+                1,"Подзадача 2 Эпик 1.", 4);
         fileBackedTasksManager.createSubtask(subtask1);
         fileBackedTasksManager.createSubtask(subtask2);
         System.out.println(fileBackedTasksManager.getPrioritizedTasks());
+        System.out.println(fileBackedTasksManager.getEpic(4));
         System.out.println();
-
         FileBackedTasksManager fileBackedTasksManager2 = loadFromFile(new File("resources/historyManagerData.csv"));
         System.out.println(fileBackedTasksManager2.getPrioritizedTasks());
+        System.out.println(fileBackedTasksManager2.getEpic(4));
     }
 }
