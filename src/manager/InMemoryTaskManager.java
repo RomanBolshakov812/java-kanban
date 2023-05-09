@@ -13,7 +13,7 @@ public class InMemoryTaskManager implements TaskManager {
     protected HashMap<Integer, Task> tasks = new HashMap<>();
     protected HashMap<Integer, Epic> epics = new HashMap<>();
     protected HashMap<Integer, Subtask> subtasks = new HashMap<>();
-    protected final Set<Task> tasksByStartTime = new TreeSet<> (Comparator.comparing(Task::getStartTime));
+    protected final Set<Task> tasksByStartTime = new TreeSet<>(Comparator.comparing(Task::getStartTime));
     protected HistoryManager inMemoryHistoryManager = Managers.getDefaultHistory();
 
     @Override
@@ -54,8 +54,8 @@ public class InMemoryTaskManager implements TaskManager {
     public void deleteAllEpics() {
         deleteAllSubtasks();
         for (Epic epic : epics.values()) {
-                inMemoryHistoryManager.remove(epic.getId());
-            }
+            inMemoryHistoryManager.remove(epic.getId());
+        }
         epics.clear();
     }
 
@@ -95,10 +95,8 @@ public class InMemoryTaskManager implements TaskManager {
     protected boolean isTimeIntervalCheck(Task newTask) {
         boolean isCheck = true;
         for (Task task : tasksByStartTime) {
-            if ((newTask.getStartTime().isBefore(task.getStartTime())
-                    || newTask.getEndTime().equals(task.getEndTime()))
-                    & (newTask.getEndTime().isAfter(task.getStartTime())
-                    || newTask.getEndTime().equals(task.getStartTime()))) {
+            if (!newTask.getStartTime().isAfter(task.getEndTime())
+                    && !newTask.getEndTime().isBefore(task.getStartTime())) {
                 isCheck = false;
             }
         }
@@ -179,13 +177,13 @@ public class InMemoryTaskManager implements TaskManager {
                 statusDone++;
             }
         }
-       if (epic.getSubtasksId().size() == 0 || statusNew == epic.getSubtasksId().size()) {
-           epic.setStatus(Status.NEW);
-       } else if (statusDone == epic.getSubtasksId().size()) {
-           epic.setStatus(Status.DONE);
-       } else {
-           epic.setStatus(Status.IN_PROGRESS);
-       }
+        if (epic.getSubtasksId().size() == 0 || statusNew == epic.getSubtasksId().size()) {
+            epic.setStatus(Status.NEW);
+        } else if (statusDone == epic.getSubtasksId().size()) {
+            epic.setStatus(Status.DONE);
+        } else {
+            epic.setStatus(Status.IN_PROGRESS);
+        }
     }
 
     private void setIntervalTimeEpic(Epic epic) {
