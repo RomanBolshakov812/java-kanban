@@ -70,13 +70,14 @@ public final class ConversionsUtility {
         return null;
     }
 
-    public static List<Integer> historyFromFileString(String value) {
+    public static List<Integer> historyFromIdString(String value) {
 
         List<Integer> history = new ArrayList<>();
         String[] parts = value.split(",");
         for (String part : parts) {
             history.add(Integer.parseInt(part));
         }
+
         return history;
     }
 }

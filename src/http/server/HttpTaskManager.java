@@ -1,10 +1,16 @@
 package http.server;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import file.FileBackedTasksManager;
 import http.KVServer.KVTaskClient;
+import manager.Managers;
+import models.Epic;
+import models.Subtask;
+import models.Task;
 
-import java.io.IOException;
+import static util.ConversionsUtility.*;
+
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,27 +20,35 @@ public class HttpTaskManager extends FileBackedTasksManager {
     Gson gson = new Gson();
     private final KVTaskClient kvTaskClient;
 
-    public HttpTaskManager(URI url) throws IOException, InterruptedException {
+    public HttpTaskManager(URI url) {
         kvTaskClient = new KVTaskClient(url);
     }
 
     @Override
     public void save() {
-
-        kvTaskClient.put("tasks", gson.toJson(tasks));
-        kvTaskClient.put("epics", gson.toJson(epics));
-        kvTaskClient.put("subtasks", gson.toJson(subtasks));
-        kvTaskClient.put("history", gson.toJson(getHistory()));
+        kvTaskClient.putInKVServer("tasks", gson.toJson(tasks));
+        kvTaskClient.putInKVServer("epics", gson.toJson(epics));
+        kvTaskClient.putInKVServer("subtasks", gson.toJson(subtasks));
+        kvTaskClient.putInKVServer("history", gson.toJson(historyToFileString(inMemoryHistoryManager)));
     }
 
-    public void load() {
-        String tasksJson = kvTaskClient.load("tasks");
-        tasks = gson.fromJson(tasksJson, HashMap.class);
-        String epicsJson = kvTaskClient.load("tasks");
-        epics = gson.fromJson(epicsJson, HashMap.class);
-        String subtasksJson = kvTaskClient.load("tasks");
-        subtasks = gson.fromJson(subtasksJson, HashMap.class);
-        String historyJson = kvTaskClient.load("tasks");
-        getHistory().addAll(gson.fromJson(historyJson, ArrayList.class));
+    public void load(HttpTaskManager httpTaskManager) {
+/*
+        if (!kvTaskClient.loadFromKVServer("tasks").isEmpty()) {
+            tasks = gson.fromJson(kvTaskClient.loadFromKVServer("tasks"),
+                    new TypeToken<HashMap<Integer, Task>>() {}.getType());
+        }*/
+
+        tasks = gson.fromJson(kvTaskClient.loadFromKVServer("tasks"),
+                new TypeToken<HashMap<Integer, Task>>() {}.getType());
+
+        tasksByStartTime.addAll(tasks.values());
+        epics = gson.fromJson(kvTaskClient.loadFromKVServer("epics"),
+                new TypeToken<HashMap<Integer, Epic>>() {}.getType());
+        subtasks = gson.fromJson(kvTaskClient.loadFromKVServer("subtasks"),
+                new TypeToken<HashMap<Integer, Subtask>>() {}.getType());
+        tasksByStartTime.addAll(subtasks.values());
+        String historyJson = kvTaskClient.loadFromKVServer("history");
+        loadHistory(historyJson, httpTaskManager);
     }
 }

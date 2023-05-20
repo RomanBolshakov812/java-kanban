@@ -23,6 +23,10 @@ public abstract class Handler implements HttpHandler {
         this.httpTaskManager = httpTaskManager;
     }
 
+    protected boolean isId(HttpExchange exchange) {
+        return exchange.getRequestURI().getQuery() != null;
+    }
+
     Task getTaskById(HttpExchange exchange) {
         return httpTaskManager.getTask(getIdFromUri(exchange));
     }

@@ -80,24 +80,28 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                     }
                 } else {
                     if ((i + 1) < content.size() && !(content.get(i + 1)).isBlank()) {
-                        for (Integer taskId : historyFromFileString(content.get(i + 1))) {
-                            if (fileBackedTasksManager.tasks.containsKey(taskId)) {
-                                fileBackedTasksManager.inMemoryHistoryManager
-                                        .addHistory(fileBackedTasksManager.tasks.get(taskId));
-                            } else if (fileBackedTasksManager.epics.containsKey(taskId)) {
-                                fileBackedTasksManager.inMemoryHistoryManager
-                                        .addHistory(fileBackedTasksManager.epics.get(taskId));
-                            } else if (fileBackedTasksManager.subtasks.containsKey(taskId)) {
-                                fileBackedTasksManager.inMemoryHistoryManager
-                                        .addHistory(fileBackedTasksManager.subtasks.get(taskId));
-                            }
-                        }
+                        loadHistory(content.get(i + 1), fileBackedTasksManager);
                         break;
                     }
                 }
             }
         }
         return fileBackedTasksManager;
+    }
+
+    protected static void loadHistory(String string, FileBackedTasksManager fileBackedTasksManager) {
+        for (Integer taskId : historyFromIdString(string)) {
+            if (fileBackedTasksManager.tasks.containsKey(taskId)) {
+                fileBackedTasksManager.inMemoryHistoryManager
+                        .addHistory(fileBackedTasksManager.tasks.get(taskId));
+            } else if (fileBackedTasksManager.epics.containsKey(taskId)) {
+                fileBackedTasksManager.inMemoryHistoryManager
+                        .addHistory(fileBackedTasksManager.epics.get(taskId));
+            } else if (fileBackedTasksManager.subtasks.containsKey(taskId)) {
+                fileBackedTasksManager.inMemoryHistoryManager
+                        .addHistory(fileBackedTasksManager.subtasks.get(taskId));
+            }
+        }
     }
 
     @Override
