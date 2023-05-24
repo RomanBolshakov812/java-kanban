@@ -5,7 +5,6 @@ import models.Subtask;
 import models.Task;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.ArrayList;
@@ -21,7 +20,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     Subtask subtask1;
     Subtask subtask2;
 
-    public void initTasks() throws IOException {
+    public void initTasks() {
 
         task1 = new Task(1,"Задача 1", Status.NEW, LocalDateTime
                 .of(2023, Month.APRIL,22,22,2), 1,"Задача 1.");

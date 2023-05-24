@@ -27,14 +27,14 @@ public class Main {
         httpTaskManager.createTask(task1);
         httpTaskManager.createTask(task2);
         httpTaskManager.createTask(task3);
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
         Epic epic1 = new Epic(4, "ЭПИК 1", Status.NEW,null,0,"Эпик 1", null);
         Epic epic2 = new Epic(5, "ЭПИК 2", Status.NEW,null,0,"Эпик 2", null);
         Epic epic3 = new Epic(6, "ЭПИК 3", Status.NEW,null,0,"Эпик 3", null);
         httpTaskManager.createEpic(epic1);
         httpTaskManager.createEpic(epic2);
         httpTaskManager.createEpic(epic3);
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
         Subtask subtask1 = new Subtask(7,"Подзадача 1 к ЭПИКУ 1", Status.NEW, LocalDateTime
                 .of(2023,Month.APRIL,22,22,16),
                 1,"Подзадача 1 Эпик 1.", 4);
@@ -47,14 +47,14 @@ public class Main {
         httpTaskManager.createSubtask(subtask1);
         httpTaskManager.createSubtask(subtask2);
         httpTaskManager.createSubtask(subtask3);
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
         Task task4 = new Task(10,"Задача 4", Status.NEW, LocalDateTime
                 .of(2023,Month.APRIL,22,22,12), 1,"Задача 4.");
         Task task5 = new Task(11,"Задача 5", Status.NEW, LocalDateTime
                 .of(2023,Month.APRIL,22,22,14), 1,"Задача 5.");
         httpTaskManager.createTask(task4);
         httpTaskManager.createTask(task5);
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
         Subtask subtask4 = new Subtask(12,"Подзадача 2 к ЭПИКУ 3", Status.NEW, LocalDateTime
                 .of(2023,Month.APRIL,22,22,10),
                 1,"Подзадача 2 Эпик 3.", 6);
@@ -63,7 +63,6 @@ public class Main {
                 1,"Подзадача 1 Эпик 2.", 5);
         httpTaskManager.createSubtask(subtask4);
         httpTaskManager.createSubtask(subtask5);
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         httpTaskManager.getTask(3);
         httpTaskManager.getEpic(4);
