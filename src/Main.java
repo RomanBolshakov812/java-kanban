@@ -15,7 +15,8 @@ public class Main {
 
         new KVServer().start();
         HttpTaskManager httpTaskManager = (HttpTaskManager) Managers.getDefault();
-        new HttpTaskServer().start(httpTaskManager);
+        HttpTaskServer httpTaskServer = new HttpTaskServer();
+        httpTaskServer.start(httpTaskManager);
 
         Task task1 = new Task(1,"Задача 1", Status.NEW, LocalDateTime
                 .of(2023,Month.APRIL,22,22,6), 1,"Задача 1.");
@@ -63,6 +64,8 @@ public class Main {
         httpTaskManager.createSubtask(subtask4);
         httpTaskManager.createSubtask(subtask5);
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
         httpTaskManager.getTask(3);
         httpTaskManager.getEpic(4);
         httpTaskManager.getSubtask(7);
@@ -82,13 +85,14 @@ public class Main {
         httpTaskManager.getSubtask(7);
         httpTaskManager.getEpic(4);
 
-        System.out.println(httpTaskManager.getPrioritizedTasks());
+        System.out.println("ПРИОРИТИ 1: " + httpTaskManager.getPrioritizedTasks());
+        System.out.println("ИСТОРИЯ 1: " + httpTaskManager.getHistory());
 
-
-/*
         HttpTaskManager httpTaskManager2 = (HttpTaskManager) Managers.getDefault();
         httpTaskManager2.load(httpTaskManager2);
+        httpTaskServer.stop();
         new HttpTaskServer().start(httpTaskManager2);
-*/
+        System.out.println("ПРИОРИТИ 2: " + httpTaskManager2.getPrioritizedTasks());
+        System.out.println("ИСТОРИЯ 2: " + httpTaskManager2.getHistory());
     }
 }

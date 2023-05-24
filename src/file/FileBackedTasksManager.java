@@ -3,6 +3,8 @@ package file;
 import exceptions.ManagerSaveException;
 import manager.InMemoryTaskManager;
 import models.*;
+import util.ConversionsUtility;
+
 import java.io.*;
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -26,16 +28,16 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             fileWriter.write("id,type,name,status,startTime,duration,description,epic\n");
 
             for (Task task : tasks.values()) {
-                fileWriter.write(toFileString(task));
+                fileWriter.write(ConversionsUtility.taskToString(task));
             }
             for (Epic epic : epics.values()) {
-                fileWriter.write(toFileString(epic));
+                fileWriter.write(ConversionsUtility.taskToString(epic));
             }
             for (Subtask subTask : subtasks.values()) {
-                fileWriter.write(toFileString(subTask));
+                fileWriter.write(ConversionsUtility.taskToString(subTask));
             }
             fileWriter.write("\n");
-            fileWriter.write(historyToFileString(inMemoryHistoryManager));
+            fileWriter.write(historyToIdString(inMemoryHistoryManager));
             fileWriter.close();
 
         } catch (IOException exception) {
@@ -62,7 +64,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             for (int i = 1; i < content.size(); i++) {
                 String line = content.get(i);
                 if (!line.isBlank()) {
-                    Task task = taskFromFileString(line);
+                    Task task = taskFromString(line);
                     assert task != null;
                     TaskType type = task.getTaskType();
                     switch (type) {
@@ -219,14 +221,14 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         fileBackedTasksManager.createTask(task1);
         fileBackedTasksManager.createTask(task2);
         fileBackedTasksManager.createTask(task3);
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
         Epic epic1 = new Epic(4, "ЭПИК 1", Status.NEW,null,0,"Эпик 1", null);
         Epic epic2 = new Epic(5, "ЭПИК 2", Status.NEW,null,0,"Эпик 2", null);
         Epic epic3 = new Epic(6, "ЭПИК 3", Status.NEW,null,0,"Эпик 3", null);
         fileBackedTasksManager.createEpic(epic1);
         fileBackedTasksManager.createEpic(epic2);
         fileBackedTasksManager.createEpic(epic3);
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
         Subtask subtask1 = new Subtask(7,"Подзадача 1 к ЭПИКУ 1", Status.NEW, LocalDateTime
                 .of(2023,Month.APRIL,22,22,16),
                 1,"Подзадача 1 Эпик 1.", 4);
@@ -239,14 +241,14 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         fileBackedTasksManager.createSubtask(subtask1);
         fileBackedTasksManager.createSubtask(subtask2);
         fileBackedTasksManager.createSubtask(subtask3);
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
         Task task4 = new Task(10,"Задача 4", Status.NEW, LocalDateTime
                 .of(2023,Month.APRIL,22,22,12), 1,"Задача 4.");
         Task task5 = new Task(11,"Задача 5", Status.NEW, LocalDateTime
                 .of(2023,Month.APRIL,22,22,14), 1,"Задача 5.");
         fileBackedTasksManager.createTask(task4);
         fileBackedTasksManager.createTask(task5);
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
         Subtask subtask4 = new Subtask(12,"Подзадача 2 к ЭПИКУ 3", Status.NEW, LocalDateTime
                 .of(2023,Month.APRIL,22,22,10),
                 1,"Подзадача 2 Эпик 3.", 6);
@@ -255,7 +257,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                 1,"Подзадача 1 Эпик 2.", 5);
         fileBackedTasksManager.createSubtask(subtask4);
         fileBackedTasksManager.createSubtask(subtask5);
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
         fileBackedTasksManager.getTask(3);
         fileBackedTasksManager.getEpic(4);
         fileBackedTasksManager.getSubtask(7);

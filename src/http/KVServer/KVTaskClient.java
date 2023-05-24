@@ -57,7 +57,7 @@ public class KVTaskClient {
         HttpResponse.BodyHandler<String> handler = HttpResponse.BodyHandlers.ofString();
         try {
             HttpResponse<String> response = kvTaskClient.send(request, handler);
-            return String.valueOf(response);
+            return String.valueOf(response.body());
         } catch (IOException | InterruptedException e) {
             throw new FileException("Данные с сервера не загружены!", e);
         }

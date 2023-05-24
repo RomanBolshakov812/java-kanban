@@ -30,19 +30,17 @@ public class KVServer {
     }
 
     private void load(HttpExchange h) throws IOException {
-
         String key = h.getRequestURI().getPath().substring("/load/".length());
-        String responseString = data.get(key);
-        if(responseString.isBlank()) {
-            h.sendResponseHeaders(404, 0);
-        } else {
-            byte[] bytes = responseString.getBytes(DEFAULT_CHARSET);
-            h.sendResponseHeaders(200, 0);
-            try (OutputStream os = h.getResponseBody()) {
-                os.write(bytes);
-            } finally {
-                h.close();
-            }
+        String responseString = "";
+        if (data.get(key) != null) {
+            responseString = data.get(key);
+        }
+        byte[] bytes = responseString.getBytes(DEFAULT_CHARSET);
+        h.sendResponseHeaders(200, 0);
+        try (OutputStream os = h.getResponseBody()) {
+            os.write(bytes);
+        } finally {
+            h.close();
         }
     }
 
@@ -50,7 +48,7 @@ public class KVServer {
         try {
             System.out.println("\n/save");
             if (!hasAuth(h)) {
-                System.out.println("Запрос неавторизован, нужен параметр в query API_TOKEN со значением апи-ключа");
+                System.out.println("Запрос не авторизован, нужен параметр в query API_TOKEN со значением апи-ключа");
                 h.sendResponseHeaders(403, 0);
                 return;
             }
@@ -98,6 +96,10 @@ public class KVServer {
         System.out.println("Открой в браузере http://localhost:" + PORT + "/");
         System.out.println("API_TOKEN: " + apiToken);
         server.start();
+    }
+
+    public void stop() {
+        server.stop(0);
     }
 
     private String generateApiToken() {

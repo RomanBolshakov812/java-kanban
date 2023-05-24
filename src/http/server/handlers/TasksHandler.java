@@ -1,6 +1,5 @@
 package http.server.handlers;
 
-import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import http.server.HttpTaskManager;
 import models.Task;
@@ -9,8 +8,6 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class TasksHandler extends Handler {
-
-    Gson gson = new Gson();
 
     public TasksHandler(HttpTaskManager httpTaskManager) {
         super(httpTaskManager);

@@ -8,10 +8,7 @@ import java.net.URI;
 public class Managers {
 
     public static TaskManager getDefault() throws IOException, InterruptedException {
-
-        HttpTaskManager httpTaskManager = new HttpTaskManager(URI.create("http://localhost:8078"));
-        //httpTaskManager.load(httpTaskManager);
-        return httpTaskManager;
+        return new HttpTaskManager(URI.create("http://localhost:8078"));
     }
 
     public static HistoryManager getDefaultHistory() {
