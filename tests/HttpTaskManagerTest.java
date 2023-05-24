@@ -19,8 +19,12 @@ public class HttpTaskManagerTest extends TaskManagerTest<HttpTaskManager> {
     HttpTaskServer httpTaskServer;
 
     @BeforeEach
-    public void BeforeEach() throws IOException, InterruptedException {
-        kvServer = new KVServer();
+    public void BeforeEach() {
+        try {
+            kvServer = new KVServer();
+        } catch (IOException exception) {
+            throw new HttpException("Ошибка при создании KVServer!");
+        }
         kvServer.start();
         taskManager = (HttpTaskManager) Managers.getDefault();
         httpTaskServer = new HttpTaskServer();
@@ -34,20 +38,16 @@ public class HttpTaskManagerTest extends TaskManagerTest<HttpTaskManager> {
         httpTaskServer.stop();
     }
 
-    private HttpTaskManager startNewHttpTaskManager() throws IOException, InterruptedException {
+    private HttpTaskManager startNewHttpTaskManager()  {
         HttpTaskManager taskManager2 = (HttpTaskManager) Managers.getDefault();
         taskManager2.load(taskManager2);
         httpTaskServer.stop();
-        try {
-            httpTaskServer.start(taskManager2);
-        } catch (IOException e) {
-            throw new HttpException("Сервер не запущен!");
-        }
+        httpTaskServer.start(taskManager2);
         return taskManager2;
     }
 
     @Test
-    public void shouldBeLoadFromEmptyKVServer() throws IOException, InterruptedException {
+    public void shouldBeLoadFromEmptyKVServer() {
         HttpTaskManager taskManager2 = startNewHttpTaskManager();
         assertEquals(taskManager.getListTasks(), taskManager2.getListTasks(), "Задачи не совпадают");
         assertEquals(taskManager.getListEpics(), taskManager2.getListEpics(), "Эпики не совпадают");
@@ -56,7 +56,7 @@ public class HttpTaskManagerTest extends TaskManagerTest<HttpTaskManager> {
     }
 
     @Test
-    public void shouldBeLoadFromNotEmptyKVServer() throws IOException, InterruptedException {
+    public void shouldBeLoadFromNotEmptyKVServer() {
         taskManager.createEpic(epic);
         taskManager.createTask(task1);
         taskManager.createSubtask(subtask1);
@@ -71,7 +71,7 @@ public class HttpTaskManagerTest extends TaskManagerTest<HttpTaskManager> {
     }
 
     @Test
-    public void shouldBeEmptyHistory() throws IOException, InterruptedException {
+    public void shouldBeEmptyHistory() {
         taskManager.createEpic(epic);
         taskManager.createTask(task1);
         taskManager.createSubtask(subtask1);
@@ -80,7 +80,7 @@ public class HttpTaskManagerTest extends TaskManagerTest<HttpTaskManager> {
     }
 
     @Test
-    public void shouldBeNotEmptyHistory() throws IOException, InterruptedException {
+    public void shouldBeNotEmptyHistory() {
         taskManager.createEpic(epic);
         taskManager.createTask(task1);
         taskManager.createSubtask(subtask1);

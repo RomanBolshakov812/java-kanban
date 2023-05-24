@@ -11,7 +11,7 @@ import java.time.Month;
 
 public class Main {
 
-    public static void main(String[] args) throws IOException, InterruptedException {
+    public static void main(String[] args) throws IOException {
 
         new KVServer().start();
         HttpTaskManager httpTaskManager = (HttpTaskManager) Managers.getDefault();
@@ -64,7 +64,6 @@ public class Main {
         httpTaskManager.createSubtask(subtask4);
         httpTaskManager.createSubtask(subtask5);
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
         httpTaskManager.getTask(3);
         httpTaskManager.getEpic(4);

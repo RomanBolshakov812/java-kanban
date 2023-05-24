@@ -39,7 +39,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             fileWriter.write("\n");
             fileWriter.write(historyToIdString(inMemoryHistoryManager));
             fileWriter.close();
-
         } catch (IOException exception) {
             throw new ManagerSaveException("Ошибка при записи файла!");
         }
@@ -49,7 +48,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
         FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager(file);
         List<String> content = new ArrayList<>();
-
         try {
             FileReader fileReader = new FileReader(file);
             BufferedReader bufferedReader = new BufferedReader(fileReader);

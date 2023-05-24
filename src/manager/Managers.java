@@ -2,12 +2,11 @@ package manager;
 
 import http.server.HttpTaskManager;
 
-import java.io.IOException;
 import java.net.URI;
 
 public class Managers {
 
-    public static TaskManager getDefault() throws IOException, InterruptedException {
+    public static TaskManager getDefault() {
         return new HttpTaskManager(URI.create("http://localhost:8078"));
     }
 
