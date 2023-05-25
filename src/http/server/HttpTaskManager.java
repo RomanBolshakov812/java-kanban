@@ -1,22 +1,28 @@
 package http.server;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import file.FileBackedTasksManager;
 import http.KVServer.KVTaskClient;
 import models.Epic;
 import models.Subtask;
 import models.Task;
+import util.LocalDateTimeAdapter;
 
 import static util.ConversionsUtility.*;
 
 import java.net.URI;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 
 public class HttpTaskManager extends FileBackedTasksManager {
 
-    Gson gson = new Gson();
     private final KVTaskClient kvTaskClient;
+
+    Gson gson = new GsonBuilder()
+            .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
+            .create();
 
     public HttpTaskManager(URI url) {
         kvTaskClient = new KVTaskClient(url);
@@ -31,7 +37,6 @@ public class HttpTaskManager extends FileBackedTasksManager {
     }
 
     public void load(HttpTaskManager httpTaskManager) {
-
         HashMap<Integer, Task> loadTasks = gson.fromJson(kvTaskClient.loadFromKVServer("tasks"),
                 new TypeToken<HashMap<Integer, Task>>() {}.getType());
         if (loadTasks != null) {

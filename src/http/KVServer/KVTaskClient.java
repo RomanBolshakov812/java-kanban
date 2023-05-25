@@ -1,6 +1,6 @@
 package http.KVServer;
 
-import exceptions.FileException;
+import exceptions.HttpException;
 
 import java.io.IOException;
 import java.net.URI;
@@ -10,14 +10,14 @@ import java.net.http.HttpResponse;
 
 public class KVTaskClient {
 
-    private static final HttpClient kvTaskClient = HttpClient.newHttpClient();
+    private final HttpClient kvTaskClient = HttpClient.newHttpClient();
     private final String API_TOKEN;
 
     public KVTaskClient(URI url) {
         API_TOKEN = registration(url);
     }
 
-    public static String registration(URI url) {
+    public String registration(URI url) {
         URI urlRegister = URI.create(url + "/register");
         HttpRequest request = HttpRequest.newBuilder()
                 .GET()
@@ -27,7 +27,7 @@ public class KVTaskClient {
         try {
         return kvTaskClient.send(request, handler).body();
         } catch (IOException | InterruptedException e) {
-            throw new FileException("Регистрация не осуществлена!", e);
+            throw new HttpException("Регистрация не осуществлена!");
         }        
     }
 
@@ -43,7 +43,7 @@ public class KVTaskClient {
         try {
             kvTaskClient.send(request, handler);
         } catch (IOException | InterruptedException e) {
-            throw new FileException("Данные на сервер не загружены!", e);
+            throw new HttpException("Данные на сервер не загружены!");
         }
     }
 
@@ -59,7 +59,7 @@ public class KVTaskClient {
             HttpResponse<String> response = kvTaskClient.send(request, handler);
             return String.valueOf(response.body());
         } catch (IOException | InterruptedException e) {
-            throw new FileException("Данные с сервера не загружены!", e);
+            throw new HttpException("Данные с сервера не загружены!");
         }
     }
 }

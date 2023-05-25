@@ -85,6 +85,7 @@ public class Main {
 
         System.out.println("ПРИОРИТИ 1: " + httpTaskManager.getPrioritizedTasks());
         System.out.println("ИСТОРИЯ 1: " + httpTaskManager.getHistory());
+        System.out.println(httpTaskManager.getTask(3).getStartTime());
 
         HttpTaskManager httpTaskManager2 = (HttpTaskManager) Managers.getDefault();
         httpTaskManager2.load(httpTaskManager2);
@@ -92,5 +93,7 @@ public class Main {
         new HttpTaskServer().start(httpTaskManager2);
         System.out.println("ПРИОРИТИ 2: " + httpTaskManager2.getPrioritizedTasks());
         System.out.println("ИСТОРИЯ 2: " + httpTaskManager2.getHistory());
+
+        System.out.println(httpTaskManager2.getTask(3).getStartTime());
     }
 }
